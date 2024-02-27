@@ -6,7 +6,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 #import dataset
-dataset_path = '/Users/sameera/Downloads/dataset.csv'
+dataset_path = '/home/kishan/Documents/projects/machinelearning_cyberstalking_research/dataset.csv'
 df = pd.read_csv(dataset_path)
 
 #performing data pre processing by converting to lowercase

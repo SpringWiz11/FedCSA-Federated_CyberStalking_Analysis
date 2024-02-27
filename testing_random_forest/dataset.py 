@@ -1,0 +1,27 @@
+# dataset.py
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from torch.utils.data import Dataset
+
+class CustomDataset(Dataset):
+    def __init__(self, file_path, max_features=5000):
+        self.data = pd.read_csv(file_path)
+        self.vectorizer = TfidfVectorizer(max_features=max_features)
+        self.X = self.vectorizer.fit_transform(self.data['text']).toarray()
+        self.y = self.data['labels'].values
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        text = self.X[idx]
+        label = self.y[idx]
+        return {'text': text, 'label': label}
+
+def get_train_test_loaders(file_path, test_size=0.2, batch_size=64):
+    dataset = CustomDataset(file_path)
+    train_data, test_data = train_test_split(dataset.data, test_size=test_size, random_state=42)
+    train_loader = DataLoader(CustomDataset(train_data), batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(CustomDataset(test_data), batch_size=batch_size, shuffle=False)
+    return train_loader, test_loader
